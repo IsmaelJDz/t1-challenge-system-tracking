@@ -12,3 +12,20 @@ frontend/.env
 backend/dist/
 frontend/build/
 frontend/dist/
+
+# Test coverage
+coverage/
+frontend/coverage/
+backend/coverage/
+
+# Next.js build output
+frontend/.next/
+# Next.js static files
+frontend/out/
+# Log files
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.next/

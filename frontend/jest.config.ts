@@ -24,6 +24,7 @@ const config: Config = {
   collectCoverageFrom: [
     'src/components/**/*.{ts,tsx}', // Solo nos interesa testear los componentes
     '!src/components/**/index.ts', // Ignorar archivos de barril (exports)
+    '!src/components/**/*.types.ts', // Ignorar archivos de tipos (solo interfaces/types)
   ],
   coverageThreshold: {
     global: {

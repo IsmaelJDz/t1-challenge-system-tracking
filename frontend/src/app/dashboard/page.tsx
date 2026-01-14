@@ -17,20 +17,17 @@ export default function Dashboard() {
   const exportMutation = useExport();
 
   useEffect(() => {
-    const checkAuth = () => {
-      const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token');
 
-      if (!token) {
-        router.push('/login');
-        return;
-      }
+    if (!token) {
+      router.push('/login');
+      return;
+    }
 
-      setIsAuthenticated(true);
-      setIsCheckingAuth(false);
-    };
-
-    checkAuth();
-  }, [router]);
+    setIsAuthenticated(true);
+    setIsCheckingAuth(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleExport = () => {
     const token = localStorage.getItem('token');
@@ -45,6 +42,7 @@ export default function Dashboard() {
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('userEmail');
     router.push('/login');
   };
 

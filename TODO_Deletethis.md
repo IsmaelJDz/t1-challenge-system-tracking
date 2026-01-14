@@ -1,5 +1,3 @@
-# Add register page
-
 # Test all project
 
 # Get events in realtime in the dashboard page

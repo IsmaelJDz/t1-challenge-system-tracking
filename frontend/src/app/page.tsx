@@ -8,18 +8,15 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    const checkAuth = () => {
-      const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token');
 
-      if (token) {
-        router.push('/dashboard');
-      } else {
-        router.push('/login');
-      }
-    };
-
-    checkAuth();
-  }, [router]);
+    if (token) {
+      router.push('/dashboard');
+    } else {
+      router.push('/login');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <main className='flex min-h-screen flex-col items-center justify-center bg-background'>

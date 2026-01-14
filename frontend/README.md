@@ -15,7 +15,8 @@ Aplicación Next.js con sistema de componentes reutilizables, design system comp
 7. [Testing](#testing)
 8. [Páginas y Rutas](#páginas-y-rutas)
 9. [Hooks Personalizados](#hooks-personalizados)
-10. [Documentación Adicional](#documentación-adicional)
+10. [Git Hooks con Husky](#git-hooks-con-husky)
+11. [Documentación Adicional](#documentación-adicional)
 
 ---
 
@@ -577,6 +578,87 @@ El proyecto incluye `.vscode/settings.json` con:
 npm run format        # Formatear todo el código
 npm run format:check  # Verificar formato sin cambiar
 ```
+
+---
+
+## 🪝 Git Hooks con Husky
+
+El proyecto usa **Husky** para ejecutar validaciones automáticas antes de cada commit, asegurando la calidad del código.
+
+### Configuración
+
+**Dependencias instaladas:**
+
+- `husky` (v9.1.7) - Git hooks manager
+- `lint-staged` (v16.2.7) - Ejecuta comandos solo en archivos staged
+
+### Pre-commit Hook
+
+Antes de cada commit, automáticamente se ejecuta:
+
+**Para archivos `.js`, `.jsx`, `.ts`, `.tsx`:**
+
+1. ✅ **Prettier** - Formatea el código
+2. ✅ **ESLint** - Corrige errores de linting
+3. ✅ **Jest** - Ejecuta tests relacionados con los archivos modificados
+
+**Para archivos `.json`, `.css`, `.md`:**
+
+1. ✅ **Prettier** - Solo formatea
+
+### Comportamiento
+
+```bash
+git add .
+git commit -m "mensaje"
+
+# Automáticamente ejecuta:
+# → prettier --write (formatea archivos)
+# → eslint --fix (corrige linting)
+# → jest --findRelatedTests (tests de archivos modificados)
+```
+
+**Si algo falla:**
+
+- ❌ El commit es **bloqueado**
+- 💡 Debes corregir los errores antes de commitear
+
+**Si todo pasa:**
+
+- ✅ El commit se realiza exitosamente
+
+### Configuración en package.json
+
+```json
+{
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "eslint --fix",
+      "jest --bail --findRelatedTests --passWithNoTests"
+    ],
+    "src/**/*.{json,css,md}": ["prettier --write"]
+  }
+}
+```
+
+### Bypass (solo en emergencias)
+
+Si necesitas hacer un commit sin ejecutar los hooks:
+
+```bash
+git commit -m "mensaje" --no-verify
+```
+
+⚠️ **No recomendado** - Solo usar en casos excepcionales.
+
+### Ventajas
+
+✅ **Código siempre formateado** antes de commit
+✅ **Tests ejecutados automáticamente** solo para archivos modificados
+✅ **Previene commits con errores** de linting
+✅ **Mantiene calidad del código** en el repositorio
+✅ **Proceso automatizado** sin intervención manual
 
 ---
 

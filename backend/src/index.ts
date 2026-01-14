@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import authRoutes from './routes/auth-routes.js';
 import trackingRoutes from './routes/tracking-routes.js';
+import { setupSwagger } from './swagger.js';
 
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI || '';
@@ -11,6 +12,8 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+setupSwagger(app);
 
 // Middleware de logging para debug
 app.use((req, res, next) => {
@@ -25,6 +28,27 @@ app.use('/api/auth', authRoutes);
 app.use('/api/components', trackingRoutes);
 // -------------
 
+/**
+ * @swagger
+ * /api/health:
+ *   get:
+ *     summary: Verificar estado del servidor
+ *     tags: [Health]
+ *     responses:
+ *       200:
+ *         description: Servidor funcionando correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: OK
+ *                 message:
+ *                   type: string
+ *                   example: Backend funcionando
+ */
 app.get('/api/health', (req: Request, res: Response) => {
   res.json({ status: 'OK', message: 'Backend funcionando' });
 });

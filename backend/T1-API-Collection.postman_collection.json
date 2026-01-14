@@ -1,0 +1,502 @@
+{
+  "info": {
+    "name": "T1 Component Library API",
+    "description": "Colección completa de endpoints para el backend de T1 Component Library. Incluye autenticación, tracking de componentes y exportación de datos.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "t1-backend"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{authToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "health"]
+            },
+            "description": "Verifica que el servidor esté funcionando correctamente."
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/health",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "health"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"OK\",\n  \"message\": \"Backend funcionando\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('authToken', jsonData.token);",
+                  "    pm.environment.set('authToken', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"usuario@ejemplo.com\",\n  \"password\": \"MiPassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "Crea una nueva cuenta de usuario. El token JWT se guarda automáticamente en las variables de colección."
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"usuario@ejemplo.com\",\n  \"password\": \"MiPassword123!\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/register",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "auth", "register"]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"_id\": \"507f1f77bcf86cd799439011\",\n  \"email\": \"usuario@ejemplo.com\",\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\"\n}"
+            },
+            {
+              "name": "User Already Exists",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"usuario@ejemplo.com\",\n  \"password\": \"MiPassword123!\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/register",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "auth", "register"]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"El usuario ya existe\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('authToken', jsonData.token);",
+                  "    pm.environment.set('authToken', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"usuario@ejemplo.com\",\n  \"password\": \"MiPassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Inicia sesión con credenciales existentes. El token JWT se guarda automáticamente."
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"usuario@ejemplo.com\",\n  \"password\": \"MiPassword123!\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/login",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "auth", "login"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"_id\": \"507f1f77bcf86cd799439011\",\n  \"email\": \"usuario@ejemplo.com\",\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\"\n}"
+            },
+            {
+              "name": "Invalid Credentials",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"usuario@ejemplo.com\",\n  \"password\": \"WrongPassword\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/login",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "auth", "login"]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Credenciales inválidas\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Component Tracking",
+      "item": [
+        {
+          "name": "Track Interaction",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"component\": \"Button\",\n  \"variant\": \"primary\",\n  \"action\": \"click\",\n  \"metadata\": {\n    \"name\": \"submit-button\",\n    \"page\": \"/dashboard\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/components/track",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "components", "track"]
+            },
+            "description": "Registra una interacción con un componente. No requiere autenticación."
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"component\": \"Button\",\n  \"variant\": \"primary\",\n  \"action\": \"click\",\n  \"metadata\": {\n    \"name\": \"submit-button\",\n    \"page\": \"/dashboard\"\n  }\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/components/track",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "components", "track"]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"_id\": \"507f1f77bcf86cd799439011\",\n  \"component\": \"Button\",\n  \"variant\": \"primary\",\n  \"action\": \"click\",\n  \"metadata\": {\n    \"name\": \"submit-button\",\n    \"page\": \"/dashboard\"\n  },\n  \"createdAt\": \"2026-01-14T10:30:00.000Z\",\n  \"updatedAt\": \"2026-01-14T10:30:00.000Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Track Input Blur",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"component\": \"Input\",\n  \"variant\": \"email\",\n  \"action\": \"blur\",\n  \"metadata\": {\n    \"name\": \"email-input\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/components/track",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "components", "track"]
+            },
+            "description": "Ejemplo de tracking de Input con blur."
+          },
+          "response": []
+        },
+        {
+          "name": "Track Modal Close",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"component\": \"Modal\",\n  \"variant\": \"md\",\n  \"action\": \"close\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/components/track",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "components", "track"]
+            },
+            "description": "Ejemplo de tracking de Modal al cerrarse."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/components/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "components", "stats"]
+            },
+            "description": "Obtiene estadísticas agregadas de interacciones por componente. No requiere autenticación."
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/components/stats",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "components", "stats"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"_id\": \"Button\",\n    \"count\": 145,\n    \"actions\": [\"click\", \"click\", \"click\"]\n  },\n  {\n    \"_id\": \"Input\",\n    \"count\": 78,\n    \"actions\": [\"blur\", \"blur\"]\n  },\n  {\n    \"_id\": \"Modal\",\n    \"count\": 23,\n    \"actions\": [\"close\", \"close\"]\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Export Data (CSV)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/components/export",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "components", "export"]
+            },
+            "description": "Exporta todos los datos de tracking en formato CSV. **REQUIERE AUTENTICACIÓN** - Primero ejecuta Login o Register para obtener el token."
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/components/export",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "components", "export"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "csv",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/csv"
+                },
+                {
+                  "key": "Content-Disposition",
+                  "value": "attachment; filename=\"analytics_export.csv\""
+                }
+              ],
+              "body": "_id,component,variant,action,createdAt\n507f1f77bcf86cd799439011,Button,primary,click,2026-01-14T10:30:00.000Z\n507f1f77bcf86cd799439012,Input,text,blur,2026-01-14T10:31:00.000Z"
+            },
+            {
+              "name": "Unauthorized",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/components/export",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "components", "export"]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"No token, autorización denegada\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -7,6 +7,7 @@ Proyecto desarrollado como parte del Examen Técnico T1.
 ## 🚀 Tecnologías
 
 ### Frontend
+
 - **Framework:** Next.js 14 (App Router)
 - **Lenguaje:** TypeScript
 - **Estilos:** Tailwind CSS (Design Tokens configurados)
@@ -14,6 +15,7 @@ Proyecto desarrollado como parte del Examen Técnico T1.
 - **Iconos:** Lucide React
 
 ### Backend
+
 - **Runtime:** Node.js
 - **Framework:** Express
 - **Base de Datos:** MongoDB Atlas + Mongoose
@@ -27,12 +29,72 @@ Proyecto desarrollado como parte del Examen Técnico T1.
 El proyecto es un Monorepo. Sigue estos pasos para iniciarlo completamente.
 
 ### Prerrequisitos
+
 - Node.js (v18.11.0 o superior)
 - npm o yarn
 - Cuenta en MongoDB Atlas
 
-### 1. Configuración del Backend
+---
+
+## 🚀 Quick Start
+
+### Backend
 
 ```bash
+# 1. Ir a la carpeta del backend
 cd backend
+
+# 2. Instalar dependencias
 npm install
+
+# 3. Configurar variables de entorno (crear .env)
+# PORT=5000
+# MONGO_URI=tu_mongodb_uri
+# JWT_SECRET=tu_secreto_jwt
+
+# 4. Levantar el servidor
+npm run dev
+```
+
+El backend estará corriendo en `http://localhost:5000`
+
+**📚 Documentación completa:** Ver [backend/DOCUMENTATION.md](backend/DOCUMENTATION.md) para endpoints, modelos y configuración detallada.
+
+---
+
+### Frontend
+
+```bash
+# 1. Ir a la carpeta del frontend
+cd frontend
+
+# 2. Instalar dependencias
+npm install
+
+# 3. Levantar el servidor de desarrollo
+npm run dev
+```
+
+El frontend estará corriendo en `http://localhost:3000`
+
+**📚 Documentación completa:** Ver [frontend/DESIGN_SYSTEM.md](frontend/DESIGN_SYSTEM.md) para componentes, tokens y arquitectura.
+
+---
+
+## 📖 Documentación Adicional
+
+- **Backend API:** [backend/DOCUMENTATION.md](backend/DOCUMENTATION.md) - Endpoints, autenticación, modelos y deployment
+- **Design System:** [frontend/DESIGN_SYSTEM.md](frontend/DESIGN_SYSTEM.md) - Componentes, tokens, variantes y guía de uso
+- **Frontend README:** [frontend/README.md](frontend/README.md) - Configuración específica del frontend
+- **Backend README:** [backend/README.md](backend/README.md) - Configuración específica del backend
+
+---
+
+## ✅ Verificación
+
+Para verificar que todo está funcionando:
+
+1. **Backend:** Visita `http://localhost:5000/api/health` - Debe retornar `{"status": "OK"}`
+2. **Frontend:** Visita `http://localhost:3000` - Debe mostrar la página de inicio
+3. **Integración:** Crea una cuenta en `/login` y accede al `/dashboard`
+   npm install

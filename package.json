@@ -9,7 +9,7 @@
     "frontend/src/**/*.{js,jsx,ts,tsx}": [
       "sh -c 'cd frontend && npx prettier --write \"$@\"' --",
       "sh -c 'cd frontend && npx eslint --fix --quiet \"$@\"' --",
-      "sh -c 'cd frontend && npx jest --bail --findRelatedTests --coverage=false \"$@\"' --"
+      "sh -c 'cd frontend && npx jest --bail --findRelatedTests --coverage=false --passWithNoTests \"$@\"' --"
     ],
     "frontend/src/**/*.{json,css,md}": [
       "sh -c 'cd frontend && npx prettier --write \"$@\"' --"

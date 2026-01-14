@@ -1,3 +1,5 @@
+TEST BORRAR
+
 # Frontend - T1 Component Library
 
 Aplicación Next.js con sistema de componentes reutilizables, design system completo y tracking automático de interacciones.

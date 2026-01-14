@@ -1,0 +1,22 @@
+{
+  "name": "t1-component-library",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "frontend/src/**/*.{js,jsx,ts,tsx}": [
+      "cd frontend && prettier --write",
+      "cd frontend && eslint --fix",
+      "cd frontend && jest --bail --findRelatedTests --passWithNoTests"
+    ],
+    "frontend/src/**/*.{json,css,md}": [
+      "cd frontend && prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7"
+  }
+}

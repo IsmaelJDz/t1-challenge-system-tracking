@@ -1,4 +1,3 @@
-// frontend/src/hooks/use-auth.ts
 import { useMutation } from '@tanstack/react-query';
 
 const API_BASE_URL = 'http://localhost:5000';

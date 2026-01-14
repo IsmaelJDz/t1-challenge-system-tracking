@@ -4,11 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Input, Modal, Card } from '../../components';
 import { Download, RefreshCw, LogOut, Loader2 } from 'lucide-react';
-
-interface StatItem {
-  _id: string;
-  count: number;
-}
+import { useStats, useExport } from '../../hooks/use-stats';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -17,8 +13,8 @@ export default function Dashboard() {
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [stats, setStats] = useState<StatItem[]>([]);
-  const [loadingStats, setLoadingStats] = useState(false);
+  const { data: stats = [], isLoading: loadingStats, refetch } = useStats();
+  const exportMutation = useExport();
 
   useEffect(() => {
     const checkAuth = () => {
@@ -36,26 +32,7 @@ export default function Dashboard() {
     checkAuth();
   }, [router]);
 
-  const fetchStats = async () => {
-    setLoadingStats(true);
-    try {
-      const res = await fetch('http://localhost:5000/api/components/stats');
-      const data = await res.json();
-      setStats(data);
-    } catch (error) {
-      console.error('Error cargando stats', error);
-    } finally {
-      setLoadingStats(false);
-    }
-  };
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      fetchStats();
-    }
-  }, [isAuthenticated]);
-
-  const handleExport = async () => {
+  const handleExport = () => {
     const token = localStorage.getItem('token');
     if (!token) {
       alert('No estás autenticado. Por favor inicia sesión.');
@@ -63,26 +40,7 @@ export default function Dashboard() {
       return;
     }
 
-    try {
-      const res = await fetch('http://localhost:5000/api/components/export', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!res.ok) throw new Error('Fallo en la exportación');
-
-      const blob = await res.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `analytics_export_${new Date().toISOString()}.csv`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-    } catch (error) {
-      alert('Error al exportar. ¿Tal vez expiró tu sesión?');
-    }
+    exportMutation.mutate();
   };
 
   const logout = () => {
@@ -135,7 +93,7 @@ export default function Dashboard() {
             </h2>
             <Card className='p-4'>
               <div className='flex flex-wrap gap-3 items-center justify-center'>
-                <Button onClick={() => fetchStats()}>Click Normal</Button>
+                <Button onClick={() => refetch()}>Click Normal</Button>
                 <Button variant='secondary'>Secundario</Button>
                 <Button variant='danger'>Peligro</Button>
                 <Button isLoading>Cargando</Button>
@@ -210,8 +168,9 @@ export default function Dashboard() {
                 <Button
                   size='sm'
                   variant='secondary'
-                  onClick={fetchStats}
+                  onClick={() => refetch()}
                   leftIcon={<RefreshCw size={14} />}
+                  isLoading={loadingStats}
                 >
                   Refrescar
                 </Button>
@@ -219,6 +178,7 @@ export default function Dashboard() {
                   size='sm'
                   onClick={handleExport}
                   leftIcon={<Download size={14} />}
+                  isLoading={exportMutation.isPending}
                 >
                   Exportar CSV
                 </Button>
@@ -284,7 +244,7 @@ export default function Dashboard() {
             <Button
               onClick={() => {
                 setIsModalOpen(false);
-                fetchStats();
+                refetch();
               }}
             >
               Entendido

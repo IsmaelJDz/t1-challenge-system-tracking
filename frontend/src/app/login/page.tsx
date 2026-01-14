@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Input, Card } from '../../components';
 import { useTracking } from '../../hooks/use-tracking';
+import { useLogin, useRegister } from '../../hooks/use-auth';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -11,41 +12,24 @@ export default function LoginPage() {
 
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({ email: '', password: '' });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+
+  const loginMutation = useLogin();
+  const registerMutation = useRegister();
+
+  const currentMutation = isLogin ? loginMutation : registerMutation;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setError('');
 
-    const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
-
-    try {
-      const res = await fetch(`http://localhost:5000${endpoint}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) throw new Error(data.message || 'Error en la petición');
-
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('userEmail', data.email);
-
-      track({
-        component: 'AuthPage',
-        action: isLogin ? 'login_success' : 'register_success',
-      });
-
-      router.push('/dashboard');
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+    currentMutation.mutate(formData, {
+      onSuccess: () => {
+        track({
+          component: 'AuthPage',
+          action: isLogin ? 'login_success' : 'register_success',
+        });
+        router.push('/dashboard');
+      },
+    });
   };
 
   return (
@@ -76,9 +60,17 @@ export default function LoginPage() {
             required
           />
 
-          {error && <p className='text-sm text-danger text-center'>{error}</p>}
+          {currentMutation.error && (
+            <p className='text-sm text-danger text-center'>
+              {currentMutation.error.message}
+            </p>
+          )}
 
-          <Button className='w-full mt-4' isLoading={loading} type='submit'>
+          <Button
+            className='w-full mt-4'
+            isLoading={currentMutation.isPending}
+            type='submit'
+          >
             {isLogin ? 'Ingresar' : 'Registrarse'}
           </Button>
         </form>

@@ -7,12 +7,12 @@
   },
   "lint-staged": {
     "frontend/src/**/*.{js,jsx,ts,tsx}": [
-      "cd frontend && prettier --write",
-      "cd frontend && eslint --fix",
-      "cd frontend && jest --bail --findRelatedTests --passWithNoTests"
+      "sh -c 'cd frontend && npx prettier --write \"$@\"' --",
+      "sh -c 'cd frontend && npx eslint --fix --quiet \"$@\"' --",
+      "sh -c 'cd frontend && npx jest --bail --findRelatedTests \"$@\"' --"
     ],
     "frontend/src/**/*.{json,css,md}": [
-      "cd frontend && prettier --write"
+      "sh -c 'cd frontend && npx prettier --write \"$@\"' --"
     ]
   },
   "devDependencies": {

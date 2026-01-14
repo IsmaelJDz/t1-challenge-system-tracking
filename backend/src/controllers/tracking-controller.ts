@@ -1,6 +1,7 @@
 import { type Request, type Response } from 'express';
 import { Tracking } from '../models/tracking.js';
 import { Parser } from 'json2csv';
+import { io } from '../index.js';
 
 export const trackInteraction = async (
   req: Request,
@@ -22,6 +23,21 @@ export const trackInteraction = async (
       metadata,
     });
 
+    const stats = await Tracking.aggregate([
+      {
+        $group: {
+          _id: '$component',
+          count: { $sum: 1 },
+          actions: { $push: '$action' },
+        },
+      },
+      {
+        $sort: { _id: 1 },
+      },
+    ]);
+
+    io.emit('stats-updated', stats);
+
     res.status(201).json(newTrack);
   } catch (error) {
     res
@@ -39,6 +55,9 @@ export const getStats = async (req: Request, res: Response) => {
           count: { $sum: 1 },
           actions: { $push: '$action' },
         },
+      },
+      {
+        $sort: { _id: 1 },
       },
     ]);
 

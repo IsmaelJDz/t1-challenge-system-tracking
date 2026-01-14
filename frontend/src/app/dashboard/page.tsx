@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Input, Modal, Card } from '../../components';
-import { Download, RefreshCw, LogOut, Loader2 } from 'lucide-react';
+import { Download, LogOut, Loader2 } from 'lucide-react';
 import { useStats, useExport } from '../../hooks/use-stats';
 
 export default function Dashboard() {
@@ -13,7 +13,7 @@ export default function Dashboard() {
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { data: stats = [], isLoading: loadingStats, refetch } = useStats();
+  const { data: stats = [], isLoading: loadingStats } = useStats();
   const exportMutation = useExport();
 
   useEffect(() => {
@@ -91,7 +91,7 @@ export default function Dashboard() {
             </h2>
             <Card className='p-4'>
               <div className='flex flex-wrap gap-3 items-center justify-center'>
-                <Button onClick={() => refetch()}>Click Normal</Button>
+                <Button>Click Normal</Button>
                 <Button variant='secondary'>Secundario</Button>
                 <Button variant='danger'>Peligro</Button>
                 <Button isLoading>Cargando</Button>
@@ -161,17 +161,10 @@ export default function Dashboard() {
             title='Panel de Estadísticas en Vivo'
           >
             <div className='flex justify-between items-center mb-6'>
-              <p className='text-sm text-gray-500'>Datos desde MongoDB Atlas</p>
+              <p className='text-sm text-gray-500'>
+                Datos en tiempo real desde MongoDB Atlas 🔴
+              </p>
               <div className='flex gap-2'>
-                <Button
-                  size='sm'
-                  variant='secondary'
-                  onClick={() => refetch()}
-                  leftIcon={<RefreshCw size={14} />}
-                  isLoading={loadingStats}
-                >
-                  Refrescar
-                </Button>
                 <Button
                   size='sm'
                   onClick={handleExport}
@@ -242,7 +235,6 @@ export default function Dashboard() {
             <Button
               onClick={() => {
                 setIsModalOpen(false);
-                refetch();
               }}
             >
               Entendido

@@ -1,13 +1,42 @@
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
+import { io, Socket } from 'socket.io-client';
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
 interface ComponentStats {
   _id: string;
   count: number;
 }
 
+let socket: Socket | null = null;
+
+const getSocket = () => {
+  if (!socket) {
+    socket = io(API_BASE_URL, {
+      transports: ['websocket', 'polling'],
+    });
+  }
+  return socket;
+};
+
 export const useStats = () => {
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    const socket = getSocket();
+
+    const handleStatsUpdate = (stats: ComponentStats[]) => {
+      queryClient.setQueryData(['stats'], stats);
+    };
+
+    socket.on('stats-updated', handleStatsUpdate);
+
+    return () => {
+      socket.off('stats-updated', handleStatsUpdate);
+    };
+  }, [queryClient]);
+
   return useQuery({
     queryKey: ['stats'],
     queryFn: async (): Promise<ComponentStats[]> => {
@@ -17,8 +46,8 @@ export const useStats = () => {
       }
       return res.json();
     },
-    refetchInterval: 60000,
-    refetchIntervalInBackground: true,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
   });
 };
 

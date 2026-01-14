@@ -12,7 +12,6 @@ describe('Componente Card', () => {
     mockTrack.mockClear();
   });
 
-  // TEST 1: Renderizado completo (Header, Footer, Imagen)
   it('renderiza imagen, título y footer si se proveen', () => {
     render(
       <Card
@@ -32,14 +31,11 @@ describe('Componente Card', () => {
     ).toBeInTheDocument();
   });
 
-  // TEST 2: Variante de estilo
   it('aplica la clase de variante correcta', () => {
     const { container } = render(<Card variant='bordered'>Contenido</Card>);
-    // Buscamos el div principal (el primer hijo del container)
     expect(container.firstChild).toHaveClass('border');
   });
 
-  // TEST 3: Tracking de interacción
   it('ejecuta tracking si tiene onClick y se hace click', async () => {
     const handleClick = jest.fn();
     render(

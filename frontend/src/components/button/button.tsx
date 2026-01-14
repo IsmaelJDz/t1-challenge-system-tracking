@@ -53,5 +53,3 @@ const Button = ({
 };
 
 export { Button };
-
-// Comentario de prueba

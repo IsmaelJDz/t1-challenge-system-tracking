@@ -1,44 +1,134 @@
-# T1 Component Library & Analytics System
+# T1 Component Library & Analytics System 🚀
 
-Sistema integral que consta de una librería de componentes React reutilizables con seguimiento automático de interacciones (analytics) y un backend dedicado para la recolección y exportación de datos.
+Sistema integral que consta de una librería de componentes React reutilizables con seguimiento automático de interacciones (analytics) en tiempo real usando Socket.IO, y un backend dedicado para la recolección y exportación de datos.
 
 Proyecto desarrollado como parte del Examen Técnico T1.
 
-## 🚀 Tecnologías
+---
 
-### Frontend
+## 🐳 Inicio Rápido con Docker (Recomendado)
 
-- **Framework:** Next.js 14 (App Router)
+La forma más sencilla de ejecutar el proyecto completo:
+
+```bash
+# 1. Verificar que todo está listo
+./verify.sh
+
+# 2. Iniciar todos los servicios
+./start.sh
+
+# 3. Acceder a la aplicación
+# Frontend: http://localhost:3000
+# Backend:  http://localhost:5000
+# API Docs: http://localhost:5000/api-docs
+```
+
+### Comandos Docker
+
+```bash
+./start.sh           # Inicia todos los servicios
+./stop.sh            # Detiene los servicios
+./logs.sh            # Ver logs de todos los servicios
+./logs.sh backend    # Ver logs de un servicio específico
+```
+
+**📚 Documentación completa de Docker:**
+- [QUICK_START.md](QUICK_START.md) - Inicio rápido
+- [DOCKER_README.md](DOCKER_README.md) - Guía completa
+- [DOCKER_SETUP_SUMMARY.md](DOCKER_SETUP_SUMMARY.md) - Resumen técnico
+
+---
+
+## 💻 Desarrollo Local (Sin Docker)
+
+### 🚀 Tecnologías
+
+#### Frontend
+- **Framework:** Next.js 16 (App Router)
 - **Lenguaje:** TypeScript
-- **Estilos:** Tailwind CSS (Design Tokens configurados)
+- **Estilos:** Tailwind CSS v4 (Design Tokens configurados)
+- **State Management:** React Query / TanStack Query
+- **Tiempo Real:** Socket.IO Client
 - **Testing:** Jest + React Testing Library (Coverage > 80%)
 - **Iconos:** Lucide React
 
-### Backend
-
-- **Runtime:** Node.js
-- **Framework:** Express
-- **Base de Datos:** MongoDB Atlas + Mongoose
+#### Backend
+- **Runtime:** Node.js 20
+- **Framework:** Express 5
+- **Base de Datos:** MongoDB 7.0
+- **ORM:** Mongoose
+- **Tiempo Real:** Socket.IO Server
 - **Autenticación:** JWT (JSON Web Tokens)
-- **Seguridad:** Bcryptjs (Hashing de contraseñas), CORS
+- **Seguridad:** Bcryptjs, CORS
+- **Documentación:** Swagger UI
 
 ---
 
-## 🛠️ Instalación y Ejecución
+## 🚀 Inicio Rápido (DEPLOY DOCKER LOCAL)
 
-El proyecto es un Monorepo. Sigue estos pasos para iniciarlo completamente.
+### 1. Levantar todos los servicios
 
-### Prerrequisitos
+```bash
+docker-compose up -d
+```
 
-- Node.js (v18.11.0 o superior)
+Este comando:
+- ✅ Levanta MongoDB en puerto 27017
+- ✅ Construye y levanta el Backend en puerto 5000
+- ✅ Construye y levanta el Frontend en puerto 3000
+- ✅ Crea volúmenes persistentes para MongoDB
+
+### 2. Ver logs
+
+```bash
+# Ver logs de todos los servicios
+docker-compose logs -f
+
+# Ver logs de un servicio específico
+docker-compose logs -f backend
+docker-compose logs -f frontend
+docker-compose logs -f mongodb
+```
+
+### 3. Acceder a la aplicación
+
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:5000
+- **Swagger Docs**: http://localhost:5000/api-docs
+- **Health Check**: http://localhost:5000/api/health
+
+### 4. Credenciales de MongoDB
+
+- **Host**: localhost:27017
+- **Usuario**: admin
+- **Password**: admin123
+- **Database**: t1_tracking
+- **Connection String**: `mongodb://admin:admin123@localhost:27017/t1_tracking?authSource=admin`
+
+## 🛠️ Comandos Útiles
+
+### Detener servicios
+
+```bash
+docker-compose down
+```
+
+### Detener y eliminar volúmenes (BORRA TODOS LOS DATOS)
+
+```bash
+docker-compose down -v
+```
+
+## MANUAL DEPLOY (TEST LOCAL ENVIRONMENT)
+el problema es que a pesar que esta mongodb en atlas, por temas de seguridad no se comparte el .env de prod, para eso se deja la version con Docker que permite levantar todos los servicios y testear la app
+
+### 📋 Prerrequisitos
+
+- Node.js v20 o superior
 - npm o yarn
-- Cuenta en MongoDB Atlas
+- MongoDB local o cuenta en MongoDB Atlas
 
----
-
-## 🚀 Quick Start
-
-### Backend
+### ⚙️ Backend
 
 ```bash
 # 1. Ir a la carpeta del backend
@@ -47,22 +137,29 @@ cd backend
 # 2. Instalar dependencias
 npm install
 
-# 3. Configurar variables de entorno (crear .env)
-# PORT=5000
-# MONGO_URI=tu_mongodb_uri
-# JWT_SECRET=tu_secreto_jwt
+# 3. Crear archivo .env desde el ejemplo
+cp .env.example .env
 
-# 4. Levantar el servidor
+# 4. Editar .env con tus credenciales
+# PORT=5000
+# MONGO_URI=mongodb://admin:admin123@localhost:27017/t1_tracking?authSource=admin
+# JWT_SECRET=tu_secreto_jwt
+# FRONTEND_URL=http://localhost:3000
+
+# 5. Levantar el servidor en desarrollo
 npm run dev
 ```
 
-El backend estará corriendo en `http://localhost:5000`
+El backend estará en `http://localhost:5000`
 
-**📚 Documentación completa:** Ver [backend/DOCUMENTATION.md](backend/DOCUMENTATION.md) para endpoints, modelos y configuración detallada.
+**Endpoints principales:**
+- API REST: `http://localhost:5000/api`
+- Swagger Docs: `http://localhost:5000/api-docs`
+- Health Check: `http://localhost:5000/api/health`
 
 ---
 
-### Frontend
+### 🎨 Frontend
 
 ```bash
 # 1. Ir a la carpeta del frontend

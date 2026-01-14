@@ -6,7 +6,7 @@ Proyecto desarrollado como parte del Examen Técnico T1.
 
 ---
 
-## 🐳 Inicio Rápido con Docker (Recomendado)
+## 🐳 Inicio Rápido con Docker (Recomendado) by SHELL
 
 La forma más sencilla de ejecutar el proyecto completo:
 

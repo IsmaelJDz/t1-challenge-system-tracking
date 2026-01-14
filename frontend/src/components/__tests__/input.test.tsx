@@ -57,4 +57,77 @@ describe('Componente Input', () => {
     const input = screen.getByLabelText(/email/i);
     expect(input).toHaveClass('border-success');
   });
+
+  // TEST 5: Estado de Warning
+  it('muestra el borde naranja y mensaje de advertencia', () => {
+    render(
+      <Input label='Usuario' warning helperText='Se recomienda minúsculas' />
+    );
+
+    const input = screen.getByLabelText(/usuario/i);
+    const helperText = screen.getByText(/se recomienda minúsculas/i);
+
+    expect(input).toHaveClass('border-warning');
+    expect(helperText).toBeInTheDocument();
+  });
+
+  // TEST 6: Tipo Password con toggle de visibilidad
+  it('alterna entre mostrar y ocultar contraseña en tipo password', async () => {
+    render(<Input label='Contraseña' type='password' />);
+
+    const input = screen.getByLabelText(/contraseña/i) as HTMLInputElement;
+    const toggleButton = screen.getByRole('button');
+
+    expect(input.type).toBe('password');
+
+    await userEvent.click(toggleButton);
+    expect(input.type).toBe('text');
+
+    await userEvent.click(toggleButton);
+    expect(input.type).toBe('password');
+  });
+
+  // TEST 7: Tipo Email con icono
+  it('renderiza icono de mail cuando type es email', () => {
+    const { container } = render(<Input label='Correo' type='email' />);
+
+    const mailIcon = container.querySelector('svg');
+    expect(mailIcon).toBeInTheDocument();
+  });
+
+  // TEST 8: Tamaños diferentes
+  it('aplica las clases correctas según el tamaño', () => {
+    const { rerender } = render(<Input label='Small' size='sm' />);
+    let input = screen.getByLabelText(/small/i);
+    expect(input).toHaveClass('px-3', 'py-1.5', 'text-sm');
+
+    rerender(<Input label='Large' size='lg' />);
+    input = screen.getByLabelText(/large/i);
+    expect(input).toHaveClass('px-5', 'py-3', 'text-lg');
+  });
+
+  // TEST 9: Helper text sin error
+  it('muestra helper text cuando no hay error', () => {
+    render(<Input label='Campo' helperText='Texto de ayuda' />);
+
+    const helperText = screen.getByText(/texto de ayuda/i);
+    expect(helperText).toBeInTheDocument();
+    expect(helperText).toHaveClass('text-gray-500');
+  });
+
+  // TEST 10: Error tiene prioridad sobre helper text
+  it('muestra error en lugar de helper text cuando ambos están presentes', () => {
+    render(<Input label='Campo' error='Error crítico' helperText='Ayuda' />);
+
+    expect(screen.getByText(/error crítico/i)).toBeInTheDocument();
+    expect(screen.queryByText(/ayuda/i)).not.toBeInTheDocument();
+  });
+
+  // TEST 11: Input deshabilitado
+  it('muestra input deshabilitado cuando disabled es true', () => {
+    render(<Input label='Campo' disabled />);
+
+    const input = screen.getByLabelText(/campo/i);
+    expect(input).toBeDisabled();
+  });
 });

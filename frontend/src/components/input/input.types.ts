@@ -1,6 +1,6 @@
 interface InputProps extends Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
-  'type'
+  'type' | 'size'
 > {
   label?: string;
   error?: string;

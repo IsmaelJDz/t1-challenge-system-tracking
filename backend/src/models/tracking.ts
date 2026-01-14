@@ -1,10 +1,10 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface ITracking extends Document {
-  component: string; // Ej: "Button", "Card"
-  variant?: string; // Ej: "primary", "outline"
-  action: string; // Ej: "click", "hover", "mount"
-  metadata?: object; // Datos extra flexibles
+  component: string;
+  variant?: string;
+  action: string;
+  metadata?: object;
 }
 
 const TrackingSchema: Schema = new Schema(
@@ -15,7 +15,7 @@ const TrackingSchema: Schema = new Schema(
     metadata: { type: Object },
   },
   {
-    timestamps: true, // Esto crea automáticamente createdAt y updatedAt
+    timestamps: true,
   }
 );
 

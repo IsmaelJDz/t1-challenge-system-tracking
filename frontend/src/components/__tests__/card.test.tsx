@@ -18,17 +18,15 @@ describe('Componente Card', () => {
       <Card
         title='Tarjeta Maestra'
         image='/img.jpg'
-        footer={<button>Ver más</button>}>
+        footer={<button>Ver más</button>}
+      >
         Descripción
       </Card>
     );
 
     expect(screen.getByText('Tarjeta Maestra')).toBeInTheDocument();
     expect(screen.getByText('Descripción')).toBeInTheDocument();
-    expect(screen.getByRole('img')).toHaveAttribute(
-      'src',
-      '/img.jpg'
-    );
+    expect(screen.getByRole('img')).toHaveAttribute('src', '/img.jpg');
     expect(
       screen.getByRole('button', { name: /ver más/i })
     ).toBeInTheDocument();
@@ -36,9 +34,7 @@ describe('Componente Card', () => {
 
   // TEST 2: Variante de estilo
   it('aplica la clase de variante correcta', () => {
-    const { container } = render(
-      <Card variant='bordered'>Contenido</Card>
-    );
+    const { container } = render(<Card variant='bordered'>Contenido</Card>);
     // Buscamos el div principal (el primer hijo del container)
     expect(container.firstChild).toHaveClass('border');
   });

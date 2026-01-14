@@ -2,6 +2,7 @@
 
 import { useTracking } from '../../hooks/use-tracking';
 import { CardProps } from './card.types';
+import { CARD_BASE_CLASSES, CARD_VARIANT_CLASSES } from './card.constants';
 
 export const Card = ({
   title,
@@ -14,13 +15,6 @@ export const Card = ({
 }: CardProps) => {
   const { track } = useTracking();
 
-  // Variantes de estilo
-  const variants = {
-    simple: 'bg-white',
-    shadow: 'bg-white shadow-md hover:shadow-lg transition-shadow',
-    bordered: 'bg-white border border-gray-200',
-  };
-
   const handleClick = () => {
     if (onClick) {
       track({
@@ -32,10 +26,13 @@ export const Card = ({
     }
   };
 
+  const variantClasses = CARD_VARIANT_CLASSES[variant];
+
   return (
     <div
-      className={`rounded-xl overflow-hidden ${variants[variant]} ${className}`}
-      onClick={handleClick}>
+      className={`${CARD_BASE_CLASSES} ${variantClasses} ${className}`}
+      onClick={handleClick}
+    >
       {image && (
         <div className='w-full h-48 overflow-hidden'>
           <img

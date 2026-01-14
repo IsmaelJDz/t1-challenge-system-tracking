@@ -1,18 +1,16 @@
 import React from 'react';
-import { Loader2 } from 'lucide-react'; // Icono de carga
+import { Loader2 } from 'lucide-react';
 import { useTracking } from '../../hooks/use-tracking';
-
-// Definimos las propiedades (Props) estrictamente como pide el PDF
-interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'danger';
-  isLoading?: boolean;
-  leftIcon?: React.ReactNode; // Icono opcional a la izquierda
-  children: React.ReactNode;
-}
+import { ButtonProps } from './button.types';
+import {
+  BUTTON_BASE_CLASSES,
+  BUTTON_VARIANT_CLASSES,
+  BUTTON_SIZE_CLASSES,
+} from './button.constants';
 
 const Button = ({
   variant = 'primary',
+  size = 'md',
   isLoading = false,
   leftIcon,
   children,
@@ -23,38 +21,26 @@ const Button = ({
 }: ButtonProps) => {
   const { track } = useTracking();
 
-  // Mapeo de estilos según la variante (usando nuestros tokens de Tailwind)
-  const baseStyles =
-    'inline-flex items-center justify-center px-4 py-2 rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
-
-  const variants = {
-    primary:
-      'bg-primary text-primary-foreground hover:bg-primary-hover focus:ring-primary',
-    secondary:
-      'bg-secondary text-secondary-foreground hover:bg-secondary-hover focus:ring-secondary',
-    danger:
-      'bg-danger text-danger-foreground hover:bg-danger-hover focus:ring-danger',
-  };
-
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    // 1. Ejecutar el tracking automático
     track({
       component: 'Button',
       variant,
       action: 'click',
     });
 
-    // 2. Ejecutar la función original onClick si existe
     if (onClick) onClick(e);
   };
 
+  const variantClasses = BUTTON_VARIANT_CLASSES[variant];
+  const sizeClasses = BUTTON_SIZE_CLASSES[size];
+
   return (
     <button
-      className={`${baseStyles} ${variants[variant]} ${className}`}
+      className={`${BUTTON_BASE_CLASSES} ${sizeClasses} ${variantClasses} ${className}`}
       onClick={handleClick}
       disabled={disabled || isLoading}
-      {...props}>
-      {/* Si está cargando, mostramos spinner. Si no, mostramos icono opcional */}
+      {...props}
+    >
       {isLoading ? (
         <Loader2 className='mr-2 h-4 w-4 animate-spin' />
       ) : leftIcon ? (

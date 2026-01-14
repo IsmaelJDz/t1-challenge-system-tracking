@@ -18,9 +18,7 @@ describe('Componente Input', () => {
     render(<Input label='Correo' placeholder='user@mail.com' />);
 
     expect(screen.getByLabelText(/correo/i)).toBeInTheDocument();
-    expect(
-      screen.getByPlaceholderText(/user@mail.com/i)
-    ).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/user@mail.com/i)).toBeInTheDocument();
   });
 
   // TEST 2: Estado de Error

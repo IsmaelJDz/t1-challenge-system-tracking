@@ -1,11 +1,9 @@
-type Size = 'sm' | 'md' | 'lg';
-
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
   footer?: React.ReactNode;
-  size?: Size;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   children: React.ReactNode;
 }
 

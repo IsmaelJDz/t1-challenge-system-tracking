@@ -1,18 +1,31 @@
 import React from 'react';
 import { useTracking } from '../../hooks/use-tracking';
-import { CheckCircle, AlertCircle } from 'lucide-react'; // Iconos para validación
-
-interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
-  label?: string;
-  error?: string; // Si hay texto aquí, estado = error
-  success?: boolean; // Si es true, estado = success
-}
+import {
+  CheckCircle,
+  AlertCircle,
+  AlertTriangle,
+  Mail,
+  Eye,
+  EyeOff,
+} from 'lucide-react';
+import { InputProps } from './input.types';
+import {
+  INPUT_BASE_CLASSES,
+  INPUT_STATE_CLASSES,
+  INPUT_SIZE_CLASSES,
+  INPUT_LABEL_CLASSES,
+  INPUT_ERROR_TEXT_CLASSES,
+  INPUT_HELPER_TEXT_CLASSES,
+} from './input.constants';
 
 export const Input = ({
   label,
   error,
   success,
+  warning,
+  helperText,
+  size = 'md',
+  type = 'text',
   className = '',
   onBlur,
   name,
@@ -22,65 +35,100 @@ export const Input = ({
 }: InputProps) => {
   const { track } = useTracking();
   const generatedId = React.useId();
-
-  // Generar un ID único si no se proporciona uno
   const inputId = id || generatedId;
+  const [showPassword, setShowPassword] = React.useState(false);
 
-  // Tracking inteligente: solo cuando el usuario deja el campo
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     track({
       component: 'Input',
-      variant: props.type || 'text',
-      action: 'blur', // Indica que terminó de interactuar
+      variant: type,
+      action: 'blur',
       metadata: { name: name || 'unnamed-input' },
     });
 
     if (onBlur) onBlur(e);
   };
 
-  // Definir colores de borde según estado
-  let borderColor =
-    'border-gray-300 focus:border-primary focus:ring-primary';
-  let icon = null;
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
-  if (error) {
-    borderColor =
-      'border-danger text-danger focus:border-danger focus:ring-danger';
-    icon = (
-      <AlertCircle className='w-5 h-5 text-danger absolute right-3 top-9' />
-    );
-  } else if (success) {
-    borderColor =
-      'border-success text-success focus:border-success focus:ring-success';
-    icon = (
-      <CheckCircle className='w-5 h-5 text-success absolute right-3 top-9' />
-    );
-  }
+  const getInputState = () => {
+    if (error) return 'error';
+    if (warning) return 'warning';
+    if (success) return 'success';
+    return 'default';
+  };
+
+  const inputState = getInputState();
+  const borderClasses = INPUT_STATE_CLASSES[inputState];
+  const sizeClasses = INPUT_SIZE_CLASSES[size];
+
+  const getIcon = () => {
+    if (error) {
+      return (
+        <AlertCircle className='w-5 h-5 text-danger absolute right-3 top-9' />
+      );
+    }
+    if (warning) {
+      return (
+        <AlertTriangle className='w-5 h-5 text-warning absolute right-3 top-9' />
+      );
+    }
+    if (success) {
+      return (
+        <CheckCircle className='w-5 h-5 text-success absolute right-3 top-9' />
+      );
+    }
+
+    if (type === 'email') {
+      return <Mail className='w-5 h-5 text-gray-400 absolute right-3 top-9' />;
+    }
+
+    if (type === 'password') {
+      return (
+        <button
+          type='button'
+          onClick={togglePasswordVisibility}
+          className='absolute right-3 top-9 text-gray-400 hover:text-gray-600 transition-colors focus:outline-none'
+          tabIndex={-1}
+        >
+          {showPassword ? (
+            <EyeOff className='w-5 h-5' />
+          ) : (
+            <Eye className='w-5 h-5' />
+          )}
+        </button>
+      );
+    }
+
+    return null;
+  };
 
   return (
     <div className={`flex flex-col gap-1 relative ${className}`}>
       {label && (
-        <label
-          htmlFor={inputId}
-          className='text-sm font-medium text-gray-700'>
+        <label htmlFor={inputId} className={INPUT_LABEL_CLASSES}>
           {label}
         </label>
       )}
 
       <input
         id={inputId}
-        className={`px-4 py-2 rounded-md border bg-white focus:outline-none focus:ring-2 focus:ring-offset-1 transition-colors disabled:opacity-50 disabled:bg-gray-100 ${borderColor}`}
+        type={type === 'password' && showPassword ? 'text' : type}
+        className={`${INPUT_BASE_CLASSES} ${sizeClasses} ${borderClasses}`}
         onBlur={handleBlur}
         disabled={disabled}
         name={name}
         {...props}
       />
 
-      {/* Icono de estado (Error/Success) */}
-      {icon}
+      {getIcon()}
 
-      {/* Mensaje de error visible */}
-      {error && <span className='text-xs text-danger'>{error}</span>}
+      {error && <span className={INPUT_ERROR_TEXT_CLASSES}>{error}</span>}
+      {!error && helperText && (
+        <span className={INPUT_HELPER_TEXT_CLASSES}>{helperText}</span>
+      )}
     </div>
   );
 };

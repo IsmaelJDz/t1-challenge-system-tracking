@@ -19,9 +19,7 @@ describe('Componente Modal', () => {
         <p>Contenido secreto</p>
       </Modal>
     );
-    expect(
-      screen.queryByText('Contenido secreto')
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText('Contenido secreto')).not.toBeInTheDocument();
   });
 
   it('renderiza correctamente cuando isOpen es true', () => {
